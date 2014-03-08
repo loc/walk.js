@@ -1,0 +1,17 @@
+<html>
+<head>
+	<script src="./lib.js"></script>
+	<script src="./grammar.js"></script>
+	<script>
+		grammar.yy = lib;
+
+		function exec() {
+			console.log(grammar.parse(document.querySelector("textarea").value));
+		}
+	</script>
+</head>
+<body>
+	<textarea>a = b + 2;</textarea>
+	<input type="button" onclick="exec();" value="Parse"/>
+</body>
+</html>
