@@ -51,14 +51,29 @@ var lib = {
 	},
 	String: function(text) {
 		return {
-			value: text,
+			value: text.slice(1, text.length-1),
 			type: "string",
 			"class": "value"
 		}
 	},
+	HashEntry: function(key, value) {
+		return {
+			key: key,
+			value: value,
+			type: "object",
+			"class": "member"
+		}
+	},
+	Object: function(entries) {
+		return this.ChildrenToParent({
+			type: "object",
+			"class": "value",
+			children: entries
+		}, entries);
+	},
 	Constant: function(value) {
 		return {
-			value: value,
+			value: parseInt(value),
 			type: "number",
 			"class": "value"
 		}
@@ -66,6 +81,15 @@ var lib = {
 	VariableDeclaration: function(assignment, isLocal) {
 		assignment.isLocal = isLocal;
 		return assignment;
+	},
+	Function: function(header, stmts) {
+		return this.ChildrenToParent({
+			name: header.name,
+			arguments: header.arguments,
+			children: stmts,
+			type: "function",
+			"class": "declaration"
+		}, stmts);
 	},
 	File: function(stmts) {
 		return this.ChildrenToParent({
